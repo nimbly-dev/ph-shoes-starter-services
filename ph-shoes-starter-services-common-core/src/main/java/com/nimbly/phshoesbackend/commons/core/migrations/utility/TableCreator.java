@@ -22,6 +22,7 @@ import software.amazon.awssdk.services.dynamodb.model.Projection;
 import software.amazon.awssdk.services.dynamodb.model.ProjectionType;
 import software.amazon.awssdk.services.dynamodb.model.ProvisionedThroughput;
 import software.amazon.awssdk.services.dynamodb.model.ResourceNotFoundException;
+import software.amazon.awssdk.services.dynamodb.model.ResourceInUseException;
 import software.amazon.awssdk.services.dynamodb.model.ScalarAttributeType;
 import software.amazon.awssdk.services.dynamodb.model.TableDescription;
 import software.amazon.awssdk.services.dynamodb.model.TableStatus;
@@ -67,8 +68,12 @@ public class TableCreator {
                             .writeCapacityUnits(writeCapacityUnits)
                             .build());
         }
-        dynamoDbClient.createTable(builder.build());
-        log.info("Created DynamoDB table {}", tableName);
+        try {
+            dynamoDbClient.createTable(builder.build());
+            log.info("Created DynamoDB table {}", tableName);
+        } catch (ResourceInUseException ex) {
+            log.info("DynamoDB table {} already exists; skipping create", tableName);
+        }
     }
 
     public void createGsiIfNotExists(String tableName,
