@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.interfaces.Verification;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -24,7 +25,7 @@ public class JwtTokenService {
             throw new IllegalStateException("phshoes.security.jwt.secret must be configured");
         }
         this.algorithm = Algorithm.HMAC256(properties.getSecret());
-        JWTVerifier.BaseVerification verification = (JWTVerifier.BaseVerification) JWT.require(algorithm);
+        Verification verification = JWT.require(algorithm);
         if (StringUtils.hasText(properties.getIssuer())) {
             verification.withIssuer(properties.getIssuer());
         }
