@@ -80,7 +80,7 @@ public class InMemoryApiRateLimiter implements ApiRateLimiter {
         }
 
         Duration window = limitConfig.getWindow() != null ? limitConfig.getWindow() : defaultWindow;
-        WindowCounter counter = counters.computeIfAbsent(key, k -> new WindowCounter(window, now));
+        WindowCounter counter = counters.computeIfAbsent(key, k -> new WindowCounter(now));
         long value = counter.incrementAndGet(window, now);
         if (value > limitConfig.getLimit()) {
             throw new RateLimitExceededException(key, "Rate limit exceeded for " + key + " on " + routeName);
@@ -93,7 +93,7 @@ public class InMemoryApiRateLimiter implements ApiRateLimiter {
 
         private final AtomicLong count = new AtomicLong();
 
-        WindowCounter(Duration window, Instant now) {
+        WindowCounter(Instant now) {
             this.windowStart = now;
             this.count.set(0);
         }
