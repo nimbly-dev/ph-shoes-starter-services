@@ -2,7 +2,7 @@ name: Maven Package
 
 on:
   push:
-    branches: [ main ]        # build on pushes to main (optional but handy)
+    branches: [ main, master ]        # build on pushes to main/master (optional but handy)
     tags:     [ "v*" ]        # build on version tags
   release: { types: [created] }
   workflow_dispatch:
